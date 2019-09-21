@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { MDBBtn, MDBDataTable, MDBCollapse  } from 'mdbreact';
-import ErrorsService from '../ErrorsService';
+import Service from '../Service';
 
 
 class ErrorLog extends Component {
@@ -51,24 +51,24 @@ class ErrorLog extends Component {
     }
 
     refreshErrors() {
-        ErrorsService.retrieveAllErrors()
+        Service.retrieveAllErrors()
             .then(response => {
                 this.setState({rows: response.data});
             })
     }
 
     refreshTotalCount() {
-        ErrorsService.getErrorsTotalCount()
+        Service.getErrorsTotalCount()
             .then(response => {
                 this.setState({totalCount: response.data});
             })
     }
 
-    toggleCollapse = collapseID => () => {
-        this.setState(prevState => ({
-          collapseID: prevState.collapseID !== collapseID ? collapseID : ""
-        }));
-    }
+    // toggleCollapse = collapseID => () => {
+    //     this.setState(prevState => ({
+    //       collapseID: prevState.collapseID !== collapseID ? collapseID : ""
+    //     }));
+    // }
 
 
     render() {

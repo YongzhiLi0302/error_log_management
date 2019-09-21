@@ -35,7 +35,7 @@ public class ErrorsHardCodedService {
      * Find all errors messages.
      * @return the list of all error messages.
      */
-    public List<ErrorLog> findAll() {
+    public static List<ErrorLog> findAll() {
         return errors;
     }
 

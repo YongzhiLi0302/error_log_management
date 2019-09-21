@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
+import Service from '../Service';
 
 
 class ProcessTable extends Component {
@@ -9,42 +10,41 @@ class ProcessTable extends Component {
         super(props);
         this.state = {
           columnDefs: [{
-            headerName: "Process", field: "process"
+            headerName: "Process", field: "processId"
           }, {
             headerName: "Status", field: "status"
           }, {
-            headerName: "Number of Items", field: "items"
+            headerName: "Number of Items", field: "numberOfItems"
           },{
-            headerName: "Information1", field: "info1"
+            headerName: "Information1", field: "information1"
           },{
-            headerName: "Information2", field: "info2"
+            headerName: "Information2", field: "information2"
           }],
-          rowData: [{
-            process: "1", status: "OK", items: 35000, info1: "info1", info2: "info2"
-          }, {
-            process: "2", status: "KO", items: 32000, info1: "info1", info2: "info2"
-          }, {
-            process: "3", status: "OK", items: 72000, info1: "info1", info2: "info2"
-          }, {
-            process: "4", status: "OK", items: 72000, info1: "info1", info2: "info2"
-          }, {
-            process: "5", status: "KO", items: 79000, info1: "info1", info2: "info2"
-          }],
-            rowClassRules: {
-                "process-failure": function(params) {
-                    var status = params.data.status;
-                    return status === "KO";
-                  }
-            }
-        }
+          rowData: [],
+          rowClassRules: {
+              "process-failure": function(params) {
+                  var status = params.data.status;
+                  return status === "KO";
+                }
+          }
+        };
+        this.refreshFlows = this.refreshFlows.bind(this);
       }
     
-    //   componentDidMount() {
-    //     fetch('https://api.myjson.com/bins/15psn9')
-    //         .then(result => result.json())
-    //         .then(rowData => this.setState({rowData}))
-    // }
+    componentDidMount() {
+        this.refreshFlows();
+    }
 
+    componentDidUpdate() {
+      this.refreshFlows();
+    }
+
+    refreshFlows() {
+      Service.retrieveAllProcesses()
+          .then(response => {
+              this.setState({rowData: response.data});
+          })
+    }
       render() {
         return (
                 <div className="container" style={{

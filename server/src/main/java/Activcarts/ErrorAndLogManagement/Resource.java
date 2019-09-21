@@ -18,18 +18,38 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @CrossOrigin(origins = { "http://localhost:3000", "http://localhost:4200" })
 @RestController
-public class ErrorResource {
+public class Resource {
 
-  @Autowired
-  private ErrorsHardCodedService errorManagementService;
+  // @Autowired
+  // private ErrorsHardCodedService errorManagementService;
 
   @GetMapping("/log/errors")
   public List<ErrorLog> getAllErrors() {
-    return errorManagementService.findAll();
+    return ErrorsHardCodedService.findAll();
   }
 
   @GetMapping("/log/errors/totalCount")
   public long getTotalErrorsCount() {
     return ErrorsHardCodedService.getIdCounter();
+  }
+
+  @GetMapping("/dashboard/flows")
+  public List<Flow> getAllProcesses() {
+    return FlowHardCodedService.getAllFlows();
+  }
+
+  @GetMapping("/dashboard/flows/active")
+  public int getActiveProcesses() {
+    return FlowHardCodedService.getActiveProcess();
+  }
+
+  @GetMapping("/dashboard/flows/failed")
+  public int getFailedProcesses() {
+    return FlowHardCodedService.getFailedProcess();
+  }
+
+  @GetMapping("/dashboard/flows/totalItems")
+  public int getTotalItems() {
+    return FlowHardCodedService.getTotalItems();
   }
 }

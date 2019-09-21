@@ -1,23 +1,54 @@
 import React from 'react';
 import {Component} from 'react';
+import Service from '../Service';
 
 class StateTable extends Component {
     constructor(props) {
         super(props);
         this.state= {
-            activeProcess: 10,
-            failedProcess: 10,
-            totalItems: 10,
+            activeProcess: null,
+            failedProcess: null,
+            totalItems: null,
             itemsLastHour: 10,
             itemsLastDay: 10,
         }
+        this.refreshTotalItems = this.refreshTotalItems.bind(this);
+        this.refreshActiveProcess = this.refreshActiveProcess.bind(this);
+        this.refreshFailedProcess = this.refreshFailedProcess.bind(this);
     }
 
-    //   componentDidMount() {
-    //     fetch('https://api.myjson.com/bins/15psn9')
-    //         .then(result => result.json())
-    //         .then(activeProcess => this.setState({activeProcess}))
-    // }
+    componentDidMount() {
+       this.refreshTotalItems();
+       this.refreshActiveProcess();
+       this.refreshFailedProcess();
+    }
+
+    componentDidUpdate() {
+        this.refreshTotalItems();
+        this.refreshActiveProcess();
+        this.refreshFailedProcess();
+    }
+
+    refreshTotalItems() {
+        Service.getTotalItems()
+            .then(response => {
+                this.setState({totalItems: response.data});
+            })
+    }
+
+    refreshActiveProcess() {
+        Service.getActiveProcessCount()
+            .then(response => {
+                this.setState({activeProcess: response.data});
+            })
+    }
+
+    refreshFailedProcess() {
+        Service.getFailedProcessCount()
+            .then(response => {
+                this.setState({failedProcess: response.data});
+            })
+    }
 
     render (){
         return(
