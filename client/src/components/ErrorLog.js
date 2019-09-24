@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { MDBBtn, MDBDataTable, MDBCollapse  } from 'mdbreact';
 import Service from '../Service';
-
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 class ErrorLog extends Component {
     constructor (props) {
@@ -11,40 +12,47 @@ class ErrorLog extends Component {
             collapseID: "",
             columns: [
                 {
-                    label: "Error ID",
+                    label: "ID",
                     field: "error",
                 },
                 {
                     label: "Description",
-                    field: "description",
-                    width: 200,
+                    field: "description"
+            
                 },
                 {
                     label: "Flow",
                     field: "flow",
-                    width: 100
+                    width: 80
                 },
                 {
-                    label: "Error Type",
+                    label: "Type",
                     field: "type",
-                    width: 100
+                    width: 80
                 },
                 {
-                    label: "Emergency Level",
+                    label: "Emergency",
                     field: "emergency",
                     width: 100,
+                },
+                {
+                    label: "Actions",
+                    field: "actions",
+                    width: 200,
                 }
             ],
             rows: [],
         };
         this.refreshErrors = this.refreshErrors.bind(this);
         this.refreshTotalCount = this.refreshTotalCount.bind(this);
+        this.rowAddActions = this.rowAddActions.bind(this);
     }
 
     componentDidMount() {
         this.refreshErrors();
         this.refreshTotalCount();
     }
+
     componentDidUpdate() {
         this.refreshErrors();
         this.refreshTotalCount();
@@ -53,8 +61,26 @@ class ErrorLog extends Component {
     refreshErrors() {
         Service.retrieveAllErrors()
             .then(response => {
-                this.setState({rows: response.data});
+                this.rowAddActions(response.data);
             })
+    }
+
+    rowAddActions(data) {
+        data = data.map((row) => {
+            return (
+                [row.id, row.description, row.flow, row.errorType, row.emergency, 
+                    <DropdownButton id="dropdown-basic-button" title="Actions">
+                        <Dropdown.Item href="#/action-1">Submit Treatment</Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">Mark as Read</Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">Send Email to Flow Manager</Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">Send Email to Flow Provider</Dropdown.Item>
+                    </DropdownButton>
+                    
+                ]
+            )
+        }
+        );
+        this.setState({rows: data});
     }
 
     refreshTotalCount() {

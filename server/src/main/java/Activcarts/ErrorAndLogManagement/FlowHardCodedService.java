@@ -51,12 +51,6 @@ public class FlowHardCodedService {
     }
 
     public static int getActiveProcess() {
-        int total = 0;
-        for(Flow flow: flows) {
-            if (flow.getStatus().equals("OK")){
-                total++;
-            }
-        }
-        return total;
+        return flowCount - getFailedProcess();
     }
 }
